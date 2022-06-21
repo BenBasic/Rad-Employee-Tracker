@@ -1,5 +1,5 @@
 -- Using the company_db database
-USE company_db;
+USE employeeDB;
 
 -- Inserting department values
 INSERT INTO department (name)
