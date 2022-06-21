@@ -133,3 +133,14 @@ function viewRoles() {
         mainMenu();
     });
 }
+
+function viewEmployees() {
+    // Selecting the name property from the departments table 
+    db.query("SELECT name FROM department;",
+    function(err, result) {
+        if (err) throw err;
+
+        console.table(result);
+        mainMenu();
+    });
+}
