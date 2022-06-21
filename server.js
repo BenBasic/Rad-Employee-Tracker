@@ -122,9 +122,9 @@ function viewDeparments() {
 
 function viewRoles() {
     /* Selecting the first name and last name property from the employee table and the title property from the role table.
-    
+
     */
-    db.query("SELECT employee.first_name, employee.last_name, role.title AS Title FROM employee JOIN role ON employee.role_id = role.id;",
+    db.query("SELECT department.name, role.salary, role.id, role.title AS Title FROM employee JOIN role ON employee.role_id = role.id;", // Need to figure out how to re-order these columns, currently want title to the left. Also remember ORDER BY, wont use it here but useful for other functions later
     function(err, result) {
         if (err) throw err;
 
