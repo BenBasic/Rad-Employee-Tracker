@@ -124,7 +124,7 @@ function viewRoles() {
     /* Selecting the first name and last name property from the employee table and the title property from the role table.
 
     */
-    db.query("SELECT department.name, role.salary, role.id, role.title AS Title FROM employee JOIN role ON employee.role_id = role.id;", // Need to figure out how to re-order these columns, currently want title to the left. Also remember ORDER BY, wont use it here but useful for other functions later
+    db.query("SELECT * FROM role JOIN department ON role.id = department.id;",
     function(err, result) {
         if (err) throw err;
 
@@ -138,7 +138,7 @@ function viewEmployees() {
     Then renaming employee table to manager table, while selecting records that have matching role values in Role and Employee tables, and department values in department table and role table.
     Then returning all matching employee id values on tables with manger_id and id properties
     */
-    db.query("SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name, CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee INNER JOIN role ON role.id = employee.role_id INNER JOIN department ON department.id = role.department_id left join employee e ON employee.manager_id = e.id;",
+    db.query("SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name, CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee INNER JOIN role ON role.id = employee.role_id INNER JOIN department ON department.id = role.department_id LEFT JOIN employee e ON employee.manager_id = e.id;",
     function(err, result) {
         if (err) throw err;
 
