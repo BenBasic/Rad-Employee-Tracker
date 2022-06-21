@@ -23,26 +23,27 @@ VALUES ("Book Keeper", 55000, 4);
 
 -- Inserting employee values for Receptionists
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Alex", "Smith", 1, null);
+VALUES ("John", "Muir", 1, null);
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Gabby", "Doe", 1, null);
+VALUES ("Alex", "Smith", 1, 1);
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("John", "Muir", 1, 2);
+VALUES ("Gabby", "Doe", 1, 1);
 
 -- Inserting employee values for Housekeepers
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Kate", "Jones", 2, null);
+VALUES ("Zoki", "Bane", 2, null);
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Zoki", "Bane", 2, 3);
+VALUES ("Kate", "Jones", 2, 4);
 
 -- Inserting employee values for Maintenance
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Dave", "Barnes", 3, 4);
+VALUES ("Dave", "Barnes", 3, null);
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Nick", "Seed", 3, null);
+VALUES ("Nick", "Seed", 3, 6);
 
 -- Inserting employee values for Book Keepers
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Manuela", "Read", 4, 5);
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("John", "Geralt", 4, null);
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Manuela", "Read", 4, 8);
+

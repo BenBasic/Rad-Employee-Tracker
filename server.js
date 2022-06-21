@@ -15,9 +15,9 @@ const db = mysql.createConnection(
       host: 'localhost',
       user: 'root',
       password: '12345',
-      database: 'company_db'
+      database: 'employeeDB'
     },
-    console.log(`Connected to the company_db database.`)
+    console.log(`Connected to the employeeDB database.`)
 );
 
 db.connect(function (err) {
@@ -121,11 +121,10 @@ function viewDeparments() {
 }
 
 function viewRoles() {
-    /* Selecting the first name and last name properties from the employee table, the title and salary properties from the role table, the name property from the department table.
-    Then renaming employee table to manager table, while selecting records that have matching role values in Role and Employee tables, and department values in department table and role table.
-    Then returning all matching employee id values on tables with manger_id and id properties
+    /* Selecting the first name and last name property from the employee table and the title property from the role table.
+    
     */
-    db.query("SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name, AS Manager FROM employee INNER JOIN role ON role.id = employee.role_id INNER JOIN department ON department.id = role.department_id left join employee e ON employee.manager_id = e.id;",
+    db.query("SELECT employee.first_name, employee.last_name, role.title AS Title FROM employee JOIN role ON employee.role_id = role.id;",
     function(err, result) {
         if (err) throw err;
 
@@ -135,8 +134,11 @@ function viewRoles() {
 }
 
 function viewEmployees() {
-    // Selecting the name property from the departments table 
-    db.query("SELECT name FROM department;",
+    /* Selecting the first name and last name properties from the employee table, the title and salary properties from the role table, the name property from the department table.
+    Then renaming employee table to manager table, while selecting records that have matching role values in Role and Employee tables, and department values in department table and role table.
+    Then returning all matching employee id values on tables with manger_id and id properties
+    */
+    db.query("SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name, CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee INNER JOIN role ON role.id = employee.role_id INNER JOIN department ON department.id = role.department_id left join employee e ON employee.manager_id = e.id;",
     function(err, result) {
         if (err) throw err;
 
@@ -144,6 +146,8 @@ function viewEmployees() {
         mainMenu();
     });
 }
+
+
 
 
 mainMenu();
