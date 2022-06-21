@@ -29,7 +29,7 @@
     "iconv-lite": "^0.4.24",
     "ieee754": "^1.2.1",
     "inherits": "^2.0.4",
-    "inquirer": "^8.2.4",
+    "inquirer": "8.2.4",
     "is-interactive": "^2.0.0",
     "is-unicode-supported": "^1.2.0",
     "isarray": "^1.0.0",

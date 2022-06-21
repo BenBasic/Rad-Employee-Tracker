@@ -144,3 +144,6 @@ function viewEmployees() {
         mainMenu();
     });
 }
+
+
+mainMenu();
