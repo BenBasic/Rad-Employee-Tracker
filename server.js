@@ -148,8 +148,10 @@ function viewEmployees() {
 }
 
 function viewEmployeesDepartment() {
-    
-    db.query("SELECT employee.first_name, employee.last_name, department.name AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id;",
+    /* Selects employee first name, employee last name, and department name properties from employee table, renames department.name to Department.
+    Then joins role tables results and department table results checking for matching id values to display the department name column and then order the displayed results by department name in alphabetical order
+    */
+    db.query("SELECT employee.first_name, employee.last_name, department.name AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY department.name;",
     function(err, result) {
         if (err) throw err;
 
@@ -159,9 +161,7 @@ function viewEmployeesDepartment() {
 }
 
 function viewManagers() {
-    /* Selecting id, first name, and last name properties from the employee table where the id from the employee's manager id column is a value of null
-
-    */
+    // Selecting id, first name, and last name properties from the employee table where the id from the employee's manager id column is a value of null
     db.query("SELECT id, first_name, last_name FROM Employee WHERE id IN (SELECT manager_id FROM employee WHERE manager_id IS NOT NULL);",
     function(err, result) {
         if (err) throw err;
