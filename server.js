@@ -121,10 +121,10 @@ function viewDeparments() {
 }
 
 function viewRoles() {
-    /* Selecting the first name and last name property from the employee table and the title property from the role table.
-
+    /* Selects role title, role salary, and repartment name properties from role table, renames department.name to Department on result table.
+    Then joins the department table's results where it will not display multiple table items with the same value, making it so that the resulting role table displays single roles instead of duplicates
     */
-    db.query("SELECT * FROM role JOIN department ON role.id = department.id;",
+    db.query("SELECT role.title, role.salary, department.name AS Department FROM role JOIN department ON role.id = department.id;",
     function(err, result) {
         if (err) throw err;
 
@@ -147,7 +147,29 @@ function viewEmployees() {
     });
 }
 
+function viewEmployeesDepartment() {
+    
+    db.query("SELECT employee.first_name, employee.last_name, department.name AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id;",
+    function(err, result) {
+        if (err) throw err;
 
+        console.table(result);
+        mainMenu();
+    });
+}
+
+function viewManagers() {
+    /* Selecting id, first name, and last name properties from the employee table where the id from the employee's manager id column is a value of null
+
+    */
+    db.query("SELECT id, first_name, last_name FROM Employee WHERE id IN (SELECT manager_id FROM employee WHERE manager_id IS NOT NULL);",
+    function(err, result) {
+        if (err) throw err;
+
+        console.table(result);
+        mainMenu();
+    });
+}
 
 
 mainMenu();
