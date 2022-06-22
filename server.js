@@ -130,10 +130,8 @@ function viewDeparments() {
 }
 
 function viewRoles() {
-    /* Selects role title, role salary, and repartment name properties from role table, renames department.name to Department on result table.
-    Then joins the department table's results where it will not display multiple table items with the same value, making it so that the resulting role table displays single roles instead of duplicates
-    */
-    db.query("SELECT role.title, role.salary, department.name AS Department FROM role JOIN department ON role.id = department.id;",
+    // Selects everything from the role table
+    db.query("SELECT * FROM role",
     function(err, result) {
         if (err) throw err;
 
