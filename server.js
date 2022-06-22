@@ -319,6 +319,7 @@ function addEmployee() {
       const roleChoices = res.map(({ id, title, salary }) => ({
         value: `${title}`, title: id, salary: `${salary}`
       }));
+      console.log(roleChoices.prototype.get(title));
   
       console.table(res);
       console.log("TEST TEST TEST: " + roleChoices)
@@ -367,14 +368,21 @@ function testPrompt(roleChoices) {
       }
     ])
     .then(function (answer) {
+        console.log("INSIDE OF THEN STATEMENT")
         let firstLastName = answer.newEmployee.split(" ");
-        let rolePick = testPrompt().indexOf(answer.newRole) + 1;
-        let managerPick = [];
         console.log("IT GOT THIS FAR")
+        let rolePick = roleChoices.indexOf(answer.newRole) + 1;
+        console.log(rolePick)
+        console.log("IT GOT THIS FAR2")
+        let managerPick = [];
+        console.log("IT GOT THIS FAR 3")
+        
 
         db.query("SELECT id FROM employee WHERE first_name = ?", answer.newManager, function (err, results) {
+            console.log("INSIDE OF QUERY")
             if (err) throw err;
             managerPick = results[0].id;
+            console.log(managerPick)
 
             db.query("INSERT INTO employee SET ?",
             {
