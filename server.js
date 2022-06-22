@@ -1,6 +1,7 @@
 // Requirement which allows inquirer package to be used with node.js
 const { connect } = require("http2");
 const inquirer = require("inquirer");
+const { first } = require("lodash");
 // Requirement allows running databases within server
 const mysql = require('mysql2');
 const { createConnection } = require("net");
@@ -10,6 +11,7 @@ require("console.table");
 const PORT = process.env.PORT || 3001;
 
 let roleChoicesArray = [];
+let managerChoicesArray = [];
 
 // Creates pathway to the database
 const db = mysql.createConnection(
@@ -250,9 +252,30 @@ function roleAssignDepartment() {
     // Insert something here
 }
 
+function roleChoices() {
+    db.query("SELECT * FROM role", function(err, result) {
+        if (err) throw err;
+        for (let i = 0; i < result.length; i++) {
+            roleChoicesArray.push(result[i].title);
+        }
+    })
+    return roleChoicesArray;
+}
+
+function managerChoices() {
+    db.query("SELECT first_name, last_name FROM employee WHERE manager_id IS NULL", function(err, result) {
+        if (err) throw err;
+        for (let i = 0; i < result.length; i++) {
+            managerChoicesArray.push(result[i].first_name);
+        }
+    })
+    return managerChoicesArray;
+}
+
 function addEmployee() {
     inquirer
-      .prompt({
+      .prompt([
+      {
         name: "newEmployee",
         type: "input",
         message: "Enter the first and last name of the employee you would you like to add"
@@ -268,28 +291,34 @@ function addEmployee() {
         type: "list",
         message: "Select this employee's manager",
         choices: managerChoices()
-      },)
-  
+      }
+    ])
       .then(function (answer) {
         let firstLastName = answer.newEmployee.split(" ");
-        db.query("INSERT INTO employee (first_name, last_name) VALUES ? " + firstLastName, function (err, result) {
+        let rolePick = roleChoices().indexOf(answer.newRole) + 1; //"," + answer.newRole;
+        let managerPick = [];
+
+        db.query("SELECT id FROM employee WHERE first_name = ?", answer.newManager, function (err, results) {
             if (err) throw err;
+            managerPick = results[0].id;
 
-            console.log(answer.newEmploye + " has been added to the list of employees")
-            console.table(result);
-            mainMenu();
-        });
+            db.query("INSERT INTO employee SET ?",
+            {
+                first_name: firstLastName[0],
+                last_name: firstLastName[1],
+                role_id: rolePick,
+                manager_id: managerPick,
+            },
+            function (err, result) {
+                if (err) throw err;
+    
+                console.log(answer.newEmployee + " has been added to the list of employees")
+                mainMenu();
+            });
+        })
     })
-}
+};
 
-function roleChoices() {
-    db.query("SELECT * FROM role", function(err, result) {
-        if (err) throw err;
-        for (let i = 0; i < result.length; i++) {
-            roleChoicesArray.push(result[i].title);
-        }
-    })
-    return roleChoicesArray;
-}
+
 
 mainMenu();

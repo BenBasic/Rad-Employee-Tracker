@@ -23,7 +23,7 @@ VALUES ("Book Keeper", 55000, 4);
 
 -- Inserting employee values for Receptionists
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("John", "Muir", 1, null);
+VALUES ("Ken", "Muir", 1, null);
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("Alex", "Smith", 1, 1);
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
