@@ -334,6 +334,7 @@ function addEmployee() {
             },
             function (err, result) {
                 if (err) throw err;
+                
     
                 console.log(answer.newEmployee + " has been added to the list of employees")
                 mainMenu();
@@ -372,11 +373,13 @@ function updateRole() {
                         type: "list",
                         message: "What role do you want to apply to this employee?",
                         choices: function() {
-                            let roleChoiceList = [];
+                            let roleChoiceList = []; //Unsure if having this locally scoped is the problem as other arrays are globally scoped I used in other blocks, but making this globally scoped didnt seem to fix the error
                             console.log(result[0].title);
                             console.log(result.length);
                             for (let i = 0; i < result.length; i++) {
                                 roleChoiceList.push(result[i].title);
+                                console.log("ROLECHOICELIST CHECK: " + roleChoiceList)
+                                console.log("RESULT[i].TITLE CHECK: " + result[i].title)
                             }
                             return roleChoiceList;
                         }
@@ -391,7 +394,7 @@ function updateRole() {
 
                         db.query("UPDATE employee SET role_id = ? WHERE first_name = ?", newRoleID, employeeFirstName, function (err, result) {
                             if (err) throw err;
-
+                            
                             console.log("Employee role is now updated");
                             mainMenu();
                         })
