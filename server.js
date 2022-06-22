@@ -9,6 +9,8 @@ require("console.table");
 // Setting up the port, will run in process environment port, if local it will be 30001
 const PORT = process.env.PORT || 3001;
 
+let roleChoicesArray = [];
+
 // Creates pathway to the database
 const db = mysql.createConnection(
     {
@@ -41,6 +43,7 @@ function mainMenu() {
                 "View all managers",
                 "Add a department",
                 "Add a role",
+                "Add an Employee",
                 "Update an employee role",
                 "Update employee managers",
                 "Delete department",
@@ -81,6 +84,10 @@ function mainMenu() {
                 addRole();
                 break;
 
+            case "Add an Employee":
+                addEmployee();
+                break;
+            
             case "Update an employee role":
                 updateRole();
                 break;
@@ -195,6 +202,7 @@ function addDepartment() {
     })
 };
 
+// WORK ON THIS TO ADD DEPARTMENT PROMPT
 function addRole() { 
     db.query("SELECT role.title AS Title, role.salary AS Salary FROM role",   function(err, results) {
       inquirer.prompt([
@@ -231,12 +239,57 @@ function addRole() {
               function(err) {
                   if (err) throw err
                   console.table(result);
-                  mainMenu();
+                  roleAssignDepartment();
                 }
             )
         });
     });
 }
 
+function roleAssignDepartment() {
+    // Insert something here
+}
+
+function addEmployee() {
+    inquirer
+      .prompt({
+        name: "newEmployee",
+        type: "input",
+        message: "Enter the first and last name of the employee you would you like to add"
+      },
+      {
+        name: "newRole",
+        type: "list",
+        message: "Select which role this employee has",
+        choices: roleChoices()
+      },
+      {
+        name: "newManager",
+        type: "list",
+        message: "Select this employee's manager",
+        choices: managerChoices()
+      },)
+  
+      .then(function (answer) {
+        let firstLastName = answer.newEmployee.split(" ");
+        db.query("INSERT INTO employee (first_name, last_name) VALUES ? " + firstLastName, function (err, result) {
+            if (err) throw err;
+
+            console.log(answer.newEmploye + " has been added to the list of employees")
+            console.table(result);
+            mainMenu();
+        });
+    })
+}
+
+function roleChoices() {
+    db.query("SELECT * FROM role", function(err, result) {
+        if (err) throw err;
+        for (let i = 0; i < result.length; i++) {
+            roleChoicesArray.push(result[i].title);
+        }
+    })
+    return roleChoicesArray;
+}
 
 mainMenu();
