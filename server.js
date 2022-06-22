@@ -171,5 +171,72 @@ function viewManagers() {
     });
 }
 
+function addDepartment() {
+
+    inquirer.prompt([
+        {
+          name: "name",
+          type: "input",
+          message: "Enter the name of the department you would you like to add",
+          validate: function (answer) {
+            if (answer.length < 1) {
+                return console.log("Please type in a valid department name");
+            }
+            return true;
+          }
+        }
+    ])
+    .then(function (answer) {
+        db.query('INSERT INTO department (name) VALUES (?)', answer.name, function (err, results) {
+            if (err) throw err;
+            console.log(answer.name + " department successfully added.");
+            mainMenu();
+        });
+    })
+};
+
+function addRole() { 
+    db.query("SELECT role.title AS Title, role.salary AS Salary FROM role",   function(err, results) {
+      inquirer.prompt([
+          {
+            name: "role_name",
+            type: "input",
+            message: "Enter the name of the role you would you like to add",
+            validate: function (answer) {
+                if (answer.length < 1) {
+                    return console.log("Please type in a valid role name");
+                }
+                return true;
+                }
+            },
+          {
+            name: "role_salary",
+            type: "input",
+            message: "What is the yearly salary of the role you would like to add?",
+            validate: function (answer) {
+                if (answer.length < 1) {
+                    return console.log("Please type in a valid salary amount");
+                }
+                return true;
+                }
+            } 
+        ])
+      .then(function(result) {
+          db.query(
+              "INSERT INTO role SET ?",
+              {
+                title: result.role_name,
+                salary: result.role_salary,
+              },
+              function(err) {
+                  if (err) throw err
+                  console.table(result);
+                  mainMenu();
+                }
+            )
+        });
+    });
+}
+
 
 mainMenu();
