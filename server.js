@@ -204,9 +204,9 @@ function addDepartment() {
     })
 };
 
-// WORK ON THIS TO ADD DEPARTMENT PROMPT
+
 function addRole() { 
-    db.query("SELECT role.title AS Title, role.salary AS Salary FROM role",   function(err, results) {
+    db.query("SELECT * FROM department",   function(err, results) {
       inquirer.prompt([
           {
             name: "role_name",
@@ -229,28 +229,54 @@ function addRole() {
                 }
                 return true;
                 }
-            } 
+            },
+            {
+                name: "role_department",
+                type: "list",
+                message: "What department does this role belong to?",
+                choices: function() {
+                    let departmentChoiceArray = [];
+                    for (let i = 0; i < results.length; i++) {
+                        departmentChoiceArray.push(results[i].name)
+                    }
+                    return departmentChoiceArray;
+                } 
+            }
         ])
       .then(function(result) {
-          db.query(
-              "INSERT INTO role SET ?",
-              {
-                title: result.role_name,
-                salary: result.role_salary,
-              },
-              function(err) {
-                  if (err) throw err
-                  console.table(result);
-                  roleAssignDepartment();
-                }
-            )
+        let departmentPick = [];
+        let departmentTitle = result.role_department;
+        let roleSalary = result.role_salary;
+        let roleName = result.role_name;
+
+        db.query("SELECT id FROM department WHERE name = ?", departmentTitle, function (err, results) {
+            if (err) throw err;
+            departmentPick = results[0].id;
+            console.log("LOOK! result.role_department is: " + result.role_department)
+            console.log("LOOK! departmentPick is: " + departmentPick)
+            console.log("LOOK! departmentTitle is: " + departmentTitle)
+            console.log("LOOK! departmentSalary is: " + roleSalary)
+            console.log("LOOK! roleName is: " + roleName)
+            // Maybe have }) here instead of below the other db.query after this
+
+            db.query("INSERT INTO role SET ?",
+                {
+                title: roleName,
+                salary: roleSalary,
+                department_id: departmentPick
+                },
+                function(err, result) {
+                    if (err) throw err;
+
+                    
+                    console.log(departmentTitle + " has been added to the list of roles")
+                    mainMenu();
+                })
+            })
         });
     });
 }
 
-function roleAssignDepartment() {
-    // Insert something here
-}
 
 function roleChoices() {
     db.query("SELECT * FROM role", function(err, result) {
@@ -295,7 +321,7 @@ function addEmployee() {
     ])
       .then(function (answer) {
         let firstLastName = answer.newEmployee.split(" ");
-        let rolePick = roleChoices().indexOf(answer.newRole) + 1; //"," + answer.newRole;
+        let rolePick = roleChoices().indexOf(answer.newRole) + 1;
         let managerPick = [];
 
         db.query("SELECT id FROM employee WHERE first_name = ?", answer.newManager, function (err, results) {
