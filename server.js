@@ -297,8 +297,7 @@ function managerChoices() {
 }
 
 function addEmployee() {
-    inquirer
-      .prompt([
+    inquirer.prompt([
       {
         name: "newEmployee",
         type: "input",
@@ -343,6 +342,64 @@ function addEmployee() {
     })
 };
 
+function updateRole() {
 
+    db.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.name AS department, e2.first_name AS manager FROM employee LEFT JOIN employee AS e2 ON e2.id = employee.manager_id JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id", function (err, results) {
+        if (err) throw err;
+        
+        inquirer.prompt([
+            {
+                name: "employeeList",
+                type: "list",
+                message: "Which employee do you want to update the role of?",
+                choices: function() {
+                    let employeeChoiceList = [];
+                    for (let i = 0; i < results.length; i++) {
+                        employeeChoiceList.push(results[i].first_name);
+                    }
+                    return employeeChoiceList;
+                }
+            }
+        ])
+        .then(function(answer) {
+            let employeeFirstName = answer.employeeList;
+
+            db.query("SELECT * FROM role", function (err, result) {
+                if (err) throw err;
+                inquirer.prompt([
+                    {
+                        name: "roleList",
+                        type: "list",
+                        message: "What role do you want to apply to this employee?",
+                        choices: function() {
+                            let roleChoiceList = [];
+                            console.log(result[0].title);
+                            console.log(result.length);
+                            for (let i = 0; i < result.length; i++) {
+                                roleChoiceList.push(result[i].title);
+                            }
+                            return roleChoiceList;
+                        }
+                    }
+                ])
+                .then(function(answer) {
+                    let employeeRole = answer.roleList;
+                    console.log("DID IT MAKE IT? " + employeeRole);
+                    db.query("SELECT * FROM role WHERE title = ?", employeeRole, function (err, results) {
+                        if (err) throw err;
+                        newRoleID = results[0].id;
+
+                        db.query("UPDATE employee SET role_id = ? WHERE first_name = ?", newRoleID, employeeFirstName, function (err, result) {
+                            if (err) throw err;
+
+                            console.log("Employee role is now updated");
+                            mainMenu();
+                        })
+                    })
+                });
+            });
+        });
+    })
+};
 
 mainMenu();
