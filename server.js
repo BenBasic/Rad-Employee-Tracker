@@ -157,11 +157,8 @@ function viewRoles() {
 }
 
 function viewEmployees() {
-    /* Selecting the first name and last name properties from the employee table, the title and salary properties from the role table, the name property from the department table.
-    Then renaming employee table to manager table, while selecting records that have matching role values in Role and Employee tables, and department values in department table and role table.
-    Then returning all matching employee id values on tables with manger_id and id properties
-    */
-    db.query("SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name, CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee INNER JOIN role ON role.id = employee.role_id INNER JOIN department ON department.id = role.department_id LEFT JOIN employee e ON employee.manager_id = e.id;",
+    // Selecting and joining table data to display the employees
+    db.query("SELECT employee.id AS Id, employee.first_name AS 'First Name', employee.last_name AS 'Last Name', role.title AS Title, department.name AS Department, role.salary AS Salary, CONCAT(manager.first_name, ' ', manager.last_name) AS Manager FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id LEFT JOIN employee manager on manager.id = employee.manager_id;",
     function(err, result) {
         if (err) throw err;
 
@@ -324,7 +321,7 @@ function addEmployee() {
       console.log("TEST TEST TEST: " + roleChoices)
       console.log("RoleToInsert!");
   
-      testPrompt(roleChoices);
+      addEmployeePrompt(roleChoices);
     });
   }
   
@@ -345,7 +342,7 @@ function managerChoices() {
 
 
 
-function testPrompt(roleChoices) {
+function addEmployeePrompt(roleChoices) {
     
     inquirer.prompt([
       {
@@ -419,7 +416,11 @@ function testPrompt(roleChoices) {
     })
 };
 
+/////
 
+
+
+////
 
 function updateRole() {
 
