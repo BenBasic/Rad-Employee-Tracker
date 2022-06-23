@@ -319,7 +319,7 @@ function addEmployee() {
       const roleChoices = res.map(({ id, title, salary }) => ({
         value: `${title}`, title: `${id}`, salary: `${salary}`
       }));
-      console.log('here is title: ', roleChoices[5].title)
+      console.log('here is title: ', roleChoices[2].title)
       console.table(res);
       console.log("TEST TEST TEST: " + roleChoices)
       console.log("RoleToInsert!");
@@ -370,11 +370,25 @@ function testPrompt(roleChoices) {
         console.log("INSIDE OF THEN STATEMENT")
         let firstLastName = answer.newEmployee.split(" ");
         console.log("IT GOT THIS FAR")
-        let rolePick = roleChoices.title.forEach(answer.newRole) + 1;
+        console.log(roleChoices)
+        console.log("answer.newRole is: " + answer.newRole)
+        //let rolePick = roleChoices; //let obj = arr.find(o => o.name === 'string 1');
+        let rolePick;
+        for (var i=0; i<roleChoices.length; i++) {
+            console.log(roleChoices[i].title)
+            if (roleChoices[i].value = answer.newRole) { //do something here }
+            rolePick = roleChoices[i].title
+            console.log("ROLE PICK IS///")
+            console.log(rolePick)
+            }
+        }
+
+        
+        console.log("ROLE PICK 2 IS///")
         console.log(rolePick)
         console.log("IT GOT THIS FAR2")
         let managerPick = [];
-        console.log("IT GOT THIS FAR 3")
+        console.log("IT GOT THIS FAR3")
         
 
         db.query("SELECT id FROM employee WHERE first_name = ?", answer.newManager, function (err, results) {
@@ -400,6 +414,8 @@ function testPrompt(roleChoices) {
         })
     })
 };
+
+
 
 function updateRole() {
 
