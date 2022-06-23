@@ -438,15 +438,14 @@ function CoolEmployee() {
       db.query("SELECT first_name, last_name FROM employee", function (err, res) {
           if (err) throw err;
           
-          const employeeMapArray = res.map(({ firstName, lastName }) => ({
-            value: `${firstName}`, title: `${lastName}`
+          const employeeMapArray = res.map(({ first_name, last_name }) => ({
+            value: `${first_name}`, title: `${last_name}`
           }));
+          console.log("EMPLOYEE MAP ARRAY")
+          console.log(employeeMapArray)
 
-          console.log(answer.newEmployee + " has been added to the list of employees")
-          mainMenu();
+          updateEmployeePrompt(employeeMapArray,roleChoices);
       });
-
-      updateEmployeePrompt(roleChoices,employeeMapArray);
     });
 }
 
@@ -467,14 +466,14 @@ function employeeChoices() {
 
 
 
-function updateEmployeePrompt(roleChoices) { // SELECT r.id, r.title, r.salary FROM role r
+function updateEmployeePrompt(employeeMapArray,roleChoices) { // SELECT r.id, r.title, r.salary FROM role r
     
     inquirer.prompt([
       {
         name: "employeeCheckList",
         type: "list",
         message: "Select which employee you'd like to change the role of",
-        choices: employeeChoices()
+        choices: employeeMapArray
       },
       {
         name: "employeeCheckRole",
