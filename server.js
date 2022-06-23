@@ -520,10 +520,9 @@ function updateEmployeePrompt(employeeMapArray,roleChoices) { // SELECT r.id, r.
             console.log("$$$$$ GOT HERE1")
 
 
-            db.query("UPDATE employee SET role_id = ? ",rolePick, " WHERE first_name = ? ", firstNamePick, function (err, result) {
+            db.query("UPDATE employee SET role_id = ? WHERE first_name = ? ", [rolePick, firstNamePick], (err, res) => {
                 if (err) throw err;
-                
-                console.log("Employee role is now updated");
+                console.log("Employee role updated");
                 mainMenu();
 
             });
