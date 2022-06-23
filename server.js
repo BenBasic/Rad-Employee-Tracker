@@ -484,18 +484,16 @@ function updateEmployeePrompt(employeeMapArray,roleChoices) { // SELECT r.id, r.
     ])
     .then(function (answer) {
         console.log("INSIDE OF THEN STATEMENT")
-        let firstLastName = answer.newEmployee.split(" ");
         console.log("IT GOT THIS FAR")
         console.log(roleChoices)
-        console.log("answer.newRole is: " + answer.newRole)
         //let rolePick = roleChoices; //let obj = arr.find(o => o.name === 'string 1');
         let rolePick;
         for (var i=0; i<roleChoices.length; i++) {
             console.log("FOR LOOP CHECK")
             console.log(roleChoices[i].value)
-            console.log(answer.newRole)
 
-            if (roleChoices[i].value == answer.newRole) { //do something here }
+
+            if (roleChoices[i].value == answer.employeeCheckRole) { //do something here }
             rolePick = roleChoices[i].title
             console.log("ROLE PICK IS///")
             console.log(rolePick)
@@ -506,30 +504,28 @@ function updateEmployeePrompt(employeeMapArray,roleChoices) { // SELECT r.id, r.
         console.log("ROLE PICK 2 IS///")
         console.log(rolePick)
         console.log("IT GOT THIS FAR2")
-        let managerPick = [];
+        let firstNamePick = [];
+        let lastNamePick = [];
         console.log("IT GOT THIS FAR3")
         
 
-        db.query("SELECT id FROM employee WHERE first_name = ?", answer.newManager, function (err, results) {
+        db.query("SELECT first_name, last_name FROM employee WHERE first_name = ?", answer.employeeCheckList, function (err, results) {
             console.log("INSIDE OF QUERY")
             if (err) throw err;
-            managerPick = results[0].id;
-            console.log(managerPick)
+            firstNamePick = results[0].first_name;
+            lastNamePick = results[0].last_name;
+            console.log(firstNamePick)
+            console.log(lastNamePick)
             console.log(rolePick)
+            console.log("$$$$$ GOT HERE1")
 
-            db.query("INSERT INTO employee SET ?",
-            {
-                first_name: firstLastName[0],
-                last_name: firstLastName[1],
-                role_id: rolePick,
-                manager_id: managerPick,
-            },
-            function (err, result) {
+
+            db.query("UPDATE employee SET role_id = ? ",rolePick, " WHERE first_name = ? ", firstNamePick, function (err, result) {
                 if (err) throw err;
                 
-    
-                console.log(answer.newEmployee + " has been added to the list of employees")
+                console.log("Employee role is now updated");
                 mainMenu();
+
             });
         })
     })
