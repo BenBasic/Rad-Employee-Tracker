@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 3001;
 
 let roleChoicesArray = [];
 let managerChoicesArray = [];
+let employeeChoicesArray = [];
 
 // Creates pathway to the database
 
@@ -107,7 +108,7 @@ function mainMenu() {
                 break;
             
             case "Update an employee role":
-                updateRole();
+                CoolEmployee();
                 break;
             
             case "Update employee managers":
@@ -323,7 +324,7 @@ function addEmployee() {
   
       addEmployeePrompt(roleChoices);
     });
-  }
+}
   
 
 
@@ -417,6 +418,123 @@ function addEmployeePrompt(roleChoices) {
 };
 
 /////
+
+function CoolEmployee() {
+    console.log("Testing employee thing")
+  
+    const query ="SELECT r.id, r.title, r.salary FROM role r"
+  
+    db.query(query, function (err, res) {
+      if (err) throw err;
+  
+      const roleChoices = res.map(({ id, title, salary }) => ({
+        value: `${title}`, title: `${id}`, salary: `${salary}`
+      }));
+      console.log('here is title: ', roleChoices[2].title)
+      console.table(res);
+      console.log("TEST TEST TEST: " + roleChoices)
+      console.log("RoleToInsert!");
+      
+      db.query("SELECT first_name, last_name FROM employee", function (err, res) {
+          if (err) throw err;
+          
+          const employeeMapArray = res.map(({ firstName, lastName }) => ({
+            value: `${firstName}`, title: `${lastName}`
+          }));
+
+          console.log(answer.newEmployee + " has been added to the list of employees")
+          mainMenu();
+      });
+
+      updateEmployeePrompt(roleChoices,employeeMapArray);
+    });
+}
+
+function employeeChoices() {
+    console.log("INSIDE EMPLOYEE CHOICES")
+    db.query("SELECT first_name, last_name FROM employee", function(err, result) {
+        
+        if (err) throw err;
+        for (let i = 0; i < result.length; i++) {
+            console.log(result[i])
+            employeeChoicesArray.push(result[i].first_name);
+            console.log(employeeChoicesArray)
+        }
+    })
+    return employeeChoicesArray;
+}
+
+
+
+
+function updateEmployeePrompt(roleChoices) { // SELECT r.id, r.title, r.salary FROM role r
+    
+    inquirer.prompt([
+      {
+        name: "employeeCheckList",
+        type: "list",
+        message: "Select which employee you'd like to change the role of",
+        choices: employeeChoices()
+      },
+      {
+        name: "employeeCheckRole",
+        type: "list",
+        message: "Select the employee's new role",
+        choices: roleChoices
+      }
+    ])
+    .then(function (answer) {
+        console.log("INSIDE OF THEN STATEMENT")
+        let firstLastName = answer.newEmployee.split(" ");
+        console.log("IT GOT THIS FAR")
+        console.log(roleChoices)
+        console.log("answer.newRole is: " + answer.newRole)
+        //let rolePick = roleChoices; //let obj = arr.find(o => o.name === 'string 1');
+        let rolePick;
+        for (var i=0; i<roleChoices.length; i++) {
+            console.log("FOR LOOP CHECK")
+            console.log(roleChoices[i].value)
+            console.log(answer.newRole)
+
+            if (roleChoices[i].value == answer.newRole) { //do something here }
+            rolePick = roleChoices[i].title
+            console.log("ROLE PICK IS///")
+            console.log(rolePick)
+            }
+        }
+
+        
+        console.log("ROLE PICK 2 IS///")
+        console.log(rolePick)
+        console.log("IT GOT THIS FAR2")
+        let managerPick = [];
+        console.log("IT GOT THIS FAR3")
+        
+
+        db.query("SELECT id FROM employee WHERE first_name = ?", answer.newManager, function (err, results) {
+            console.log("INSIDE OF QUERY")
+            if (err) throw err;
+            managerPick = results[0].id;
+            console.log(managerPick)
+            console.log(rolePick)
+
+            db.query("INSERT INTO employee SET ?",
+            {
+                first_name: firstLastName[0],
+                last_name: firstLastName[1],
+                role_id: rolePick,
+                manager_id: managerPick,
+            },
+            function (err, result) {
+                if (err) throw err;
+                
+    
+                console.log(answer.newEmployee + " has been added to the list of employees")
+                mainMenu();
+            });
+        })
+    })
+};
 
 
 
