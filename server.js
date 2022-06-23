@@ -375,8 +375,11 @@ function testPrompt(roleChoices) {
         //let rolePick = roleChoices; //let obj = arr.find(o => o.name === 'string 1');
         let rolePick;
         for (var i=0; i<roleChoices.length; i++) {
-            console.log(roleChoices[i].title)
-            if (roleChoices[i].value = answer.newRole) { //do something here }
+            console.log("FOR LOOP CHECK")
+            console.log(roleChoices[i].value)
+            console.log(answer.newRole)
+
+            if (roleChoices[i].value == answer.newRole) { //do something here }
             rolePick = roleChoices[i].title
             console.log("ROLE PICK IS///")
             console.log(rolePick)
@@ -396,6 +399,7 @@ function testPrompt(roleChoices) {
             if (err) throw err;
             managerPick = results[0].id;
             console.log(managerPick)
+            console.log(rolePick)
 
             db.query("INSERT INTO employee SET ?",
             {
