@@ -317,10 +317,9 @@ function addEmployee() {
       if (err) throw err;
   
       const roleChoices = res.map(({ id, title, salary }) => ({
-        value: `${title}`, title: id, salary: `${salary}`
+        value: `${title}`, title: `${id}`, salary: `${salary}`
       }));
-      console.log(roleChoices.prototype.get(title));
-  
+      console.log('here is title: ', roleChoices[5].title)
       console.table(res);
       console.log("TEST TEST TEST: " + roleChoices)
       console.log("RoleToInsert!");
@@ -371,7 +370,7 @@ function testPrompt(roleChoices) {
         console.log("INSIDE OF THEN STATEMENT")
         let firstLastName = answer.newEmployee.split(" ");
         console.log("IT GOT THIS FAR")
-        let rolePick = roleChoices.indexOf(answer.newRole) + 1;
+        let rolePick = roleChoices.title.forEach(answer.newRole) + 1;
         console.log(rolePick)
         console.log("IT GOT THIS FAR2")
         let managerPick = [];
